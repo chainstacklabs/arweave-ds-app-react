@@ -33,3 +33,5 @@ yarn-error.log*
 
 Notes.md
 tests.md
+
+.env
