@@ -20,6 +20,42 @@ contract DropAndSell {
     event FileListed(uint256 indexed id, string title, uint256 price);
     event FileSold(uint256 indexed id, address buyer);
 
+    modifier isOwner(uint256 _id) {
+        require(
+            msg.sender == files[_id].owner,
+            "You are not the owner of this file"
+        );
+        _;
+    }
+
+    modifier isNotOwner(uint256 _id) {
+        require(
+            msg.sender != files[_id].owner,
+            "You are the owner of this file"
+        );
+        _;
+    }
+
+    modifier fileExists(uint256 _id) {
+        require(files.length >= _id, "The file does not exists");
+        _;
+    }
+
+    modifier isBuyer(uint256 _id) {
+        require(files[_id].buyers.length > 0, "The file has no buyers");
+
+        bool userIsBuyer = false;
+        for (uint256 x = 0; x < files[_id].buyers.length; x++) {
+            console.log("x", x);
+            if (files[_id].buyers[x] == msg.sender) {
+                console.log("Found buyer: ", files[_id].buyers[x]);
+                userIsBuyer = true;
+            }
+        }
+        require(userIsBuyer, "You do not own this file.");
+        _;
+    }
+
     function listFile(
         string memory _title,
         uint64 _price,
@@ -44,17 +80,12 @@ contract DropAndSell {
         // return filePaths;
     }
 
-    function buyFile(uint256 _id) public payable returns (string[] memory) {
-        // check if file exists
-        require(_id <= files.length, "The file does not exists");
-
-        // check if sender is the owner
-        require(
-            files[_id].owner != msg.sender,
-            "You are the owner of this file"
-        );
-
-        console.log("Checked owner");
+    function buyFile(uint256 _id)
+        external
+        payable
+        fileExists(_id)
+        isNotOwner(_id)
+    {
         console.log("Contract balance: ", address(this).balance);
         console.log("msg.value: ", msg.value);
         console.log("file price: ", files[_id].price);
@@ -77,9 +108,7 @@ contract DropAndSell {
 
         emit FileSold(_id, msg.sender);
 
-        // console.log(files[_id].buyers);
-        // return path to download file
-        return filePaths;
+        console.log("Path is: ", filePaths[_id]);
     }
 
     function getFiles() public view returns (File[] memory) {
@@ -103,34 +132,46 @@ contract DropAndSell {
         return ownedFiles;
     }
 
+    function getDownloadLink(uint256 _id)
+        public
+        view
+        fileExists(_id)
+        isBuyer(_id)
+        returns (string memory)
+    {
+        return filePaths[_id];
+    }
+
     function getBoughtFiles() public view returns (File[] memory) {
         uint256 resCount;
 
         console.log("files.length: ", files.length);
 
-        for (uint256 i = 0; i < files.length - 1; i++) {
-            console.log("i:", i);
+        for (uint256 i = 0; i < files.length; i++) {
             if (files[i].buyers.length > 0) {
-                console.log("Length: ", files[i].buyers.length);
-                for (uint256 x = 0; i < files[i].buyers.length - 1; x++) {
+                console.log("Buyers length: ", files[i].buyers.length);
+                for (uint256 x = 0; x < files[i].buyers.length; x++) {
                     console.log("x", x);
                     if (files[i].buyers[x] == msg.sender) {
                         console.log("Found buyer: ", files[i].buyers[x]);
                         resCount++;
-                        console.log("resCount: ", resCount);
                     }
                 }
+            } else {
+                console.log("No buyers for file: ", i);
             }
         }
 
         console.log("resCount after loop: ", resCount);
 
+        require(resCount > 0, "You bought no files");
+
         File[] memory boughtFiles = new File[](resCount);
 
-        for (uint256 j = 0; j < files.length - 1; j++) {
+        for (uint256 j = 0; j < files.length; j++) {
             if (files[j].buyers.length > 0) {
                 console.log("Length: ", files[j].buyers.length);
-                for (uint256 v = 0; v < files[j].buyers.length - 1; v++) {
+                for (uint256 v = 0; v < files[j].buyers.length; v++) {
                     if (files[j].buyers[v] == msg.sender) {
                         boughtFiles[j] = files[j];
                     }

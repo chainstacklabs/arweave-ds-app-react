@@ -37,7 +37,7 @@ describe('DropAndSell', () => {
       'http://arweave.com/123123'
     )
     // console.log('res', res)
-    let files = await dropsellcontract.getFiles()
+    let files = await dropsellcontract.connect(user1).getFiles()
 
     expect(files.length).to.equal(1)
 
@@ -48,7 +48,7 @@ describe('DropAndSell', () => {
     )
     // console.log('res', res)
     files = await dropsellcontract.getFiles()
-    console.log('files', files)
+    // console.log('files', files)
     expect(files.length).to.equal(2)
   })
 
@@ -70,16 +70,23 @@ describe('DropAndSell', () => {
     ).to.be.revertedWith('Not enough funds')
   })
   it('allows user to buy file', async () => {
-    let tx = await dropsellcontract.connect(user1).buyFile(0, { value: 10 })
-    console.log('tx', tx)
-    const res = await tx.wait()
-    console.log('res', res)
-    // expect(res.data.toString()).to.equal('http://arweave.com/123123')
-    // const filess = await dropsellcontract.getFiles()
-    // console.log('files', filess)
-
-    // let files = await dropsellcontract.connect(user1).getBoughtFiles()
-    // console.log('files', files)
-    // expect(files.length).to.equal(1)
+    await expect(
+      dropsellcontract.connect(user1).getBoughtFiles()
+    ).to.be.revertedWith('You bought no files')
+    let tx = await dropsellcontract
+      .connect(user1)
+      .buyFile(0, { value: ethers.utils.parseEther('10') })
+    // console.log('tx', tx)
+    const owned = await dropsellcontract.connect(user1).getBoughtFiles()
+    console.log('owned', owned)
+    expect(owned.length).to.equal(1)
+    const link = await dropsellcontract.connect(user1).getDownloadLink(0)
+    console.log('link', link)
+    expect(link).to.equal('http://arweave.com/123123')
+  })
+  it('prevents not buyers to check download link', async () => {
+    await expect(dropsellcontract.getDownloadLink(0)).to.be.revertedWith(
+      'You do not own this file.'
+    )
   })
 })
