@@ -16,6 +16,8 @@ function MyApp({ Component, pageProps }) {
   const [contract, setContract] = useState()
   const [contractGetter, setContractGetter] = useState()
 
+  const [ownedFiles, setOwnedFiles] = useState()
+
   // polygon mainner
   // const targetNetworkId = '0x89'
   // polygon mumbai testnet
@@ -32,6 +34,7 @@ function MyApp({ Component, pageProps }) {
   // set the base currency as matic (this can be changed later in the app)
   const [currency, setCurrency] = useState('matic')
   const bundlrRef = useRef()
+  const contractRef = useRef()
 
   // create a function to connect to bundlr network
   async function initialiseBundlr() {
@@ -45,7 +48,8 @@ function MyApp({ Component, pageProps }) {
     provider = new providers.Web3Provider(window.ethereum)
     await provider._ready()
 
-    console.log('provider', provider)
+    console.log('Provider Ready! > ', provider)
+    const signer = provider.getSigner()
 
     const bundlr = new WebBundlr(
       // 'https://node1.bundlr.network',
@@ -54,23 +58,22 @@ function MyApp({ Component, pageProps }) {
       provider
     )
     await bundlr.ready()
+    console.log('Bundlr provider ready')
 
     setBundlrInstance(bundlr)
     bundlrRef.current = bundlr
-    await fetchBalance()
     await initContractInterface()
+    await fetchBalance()
+    await getOwnedFiles()
   }
 
   async function initContractInterface() {
     const signer = provider.getSigner()
     const contract = new Contract(contractAddress, DropAndSell.abi, signer)
-    const contractGetter = new Contract(
-      contractAddress,
-      DropAndSell.abi,
-      provider
-    )
+    const contractG = new Contract(contractAddress, DropAndSell.abi, provider)
     setContract(contract)
-    setContractGetter(contractGetter)
+    setContractGetter(contractG)
+    contractRef.current = contractG
   }
 
   // get the user's bundlr balance
@@ -83,6 +86,18 @@ function MyApp({ Component, pageProps }) {
     const balance = await provider.getBalance(bundlrRef.current.address)
     console.log('balance : ', utils.formatEther(balance.toString()))
     setBalance(utils.formatEther(balance.toString()))
+  }
+
+  async function getOwnedFiles() {
+    try {
+      console.log('Retrieving bought files')
+      console.log('contractGetter >> ', contractRef.current)
+      const files = await contractRef.current.getBoughtFiles()
+      console.log('owned files', files)
+      setOwnedFiles(files)
+    } catch (error) {
+      console.error('ERROR GETTING FILES INFO', error)
+    }
   }
 
   // checks if current chain matches with the target
@@ -168,6 +183,8 @@ function MyApp({ Component, pageProps }) {
             bundlrBalance,
             contract,
             contractGetter,
+            ownedFiles,
+            getOwnedFiles,
           }}
         >
           <Component {...pageProps} />

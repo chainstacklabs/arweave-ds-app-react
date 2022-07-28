@@ -6,7 +6,6 @@ import Head from 'next/head'
 import File from '../components/File'
 
 import { useEffect, useState, useContext } from 'react'
-import { utils } from 'ethers'
 
 import Router from 'next/router'
 
@@ -19,44 +18,19 @@ export default function Browse() {
 
   // when app loads, fetch videos
   useEffect(() => {
-    if (!bundlrInstance) Router.push('/')
+    // if (!bundlrInstance) Router.push('/')
+    // fetch listed files from contract
+    async function getFiles() {
+      try {
+        const files = await contractGetter.getFiles()
+        console.log('files retrieved: ', files)
+        setFiles(files)
+      } catch (error) {
+        console.error('ERROR GETTING FILE LIST: ', error)
+      }
+    }
     getFiles()
   }, [])
-
-  // fetch data from Arweave
-  // map over data and fetch metadata for each video then save to local state
-  async function getFiles() {
-    try {
-      const files = await contractGetter.getFiles()
-      console.log('files', files)
-      setFiles(files)
-    } catch (error) {
-      console.error('ERROR GETTING FILES INFO', error)
-    }
-    // try {
-    //   const results = await arweave.api.post('/graphql', query).catch((err) => {
-    //     console.error('GraphQL query failed')
-    //     throw new Error(err)
-    //   })
-    //   console.log('results', results)
-    //   const edges = results.data.data.transactions.edges
-    //   const files = await Promise.all(
-    //     edges.map(async (edge) => await createFileMeta(edge.node))
-    //   )
-    //   console.log('files', files)
-    //   let sorted = files.sort(
-    //     (a, b) =>
-    //       new Date(b.request.data.createdAt) -
-    //       new Date(a.request.data.createdAt)
-    //   )
-    //   sorted = sorted.map((s) => s.request.data)
-    //   setFiles(sorted)
-    // } catch (err) {
-    //   await wait(2 ** depth * 10)
-    //   getPostInfo(topicFilter, depth + 1)
-    //   console.log('error: ', err)
-    // }
-  }
 
   return (
     <div>
@@ -68,11 +42,14 @@ export default function Browse() {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <h2 className="mb-12 font-medium text-2xl">Files listed to sale</h2>
+      <h2 className="mb-4 font-medium text-2xl">Files listed to sale</h2>
       {error && <p>{error}</p>}
-      <div className="container mx-auto grid md:grid-cols-3 gap-4 ">
+      <p className="text-sm mb-4">
+        There are {files.length} files listed to sell
+      </p>
+      <div className="container mx-auto grid md:grid-cols-3 gap-4 mt-12">
         {files.length > 0 &&
-          files.map((file) => <File file="file" key={file.id} />)}
+          files.map((file) => <File file={file} key={file.id} />)}
       </div>
     </div>
   )

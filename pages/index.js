@@ -96,39 +96,6 @@ export default function Home() {
     }
   }
 
-  // async function saveFileMetadata() {
-  //   if (!file || !title || !description) return
-  //   const tags = [
-  //     // { name: 'Content-Type', value: 'text/plain' },
-  //     { name: 'App-Name', value: APP_NAME },
-  //   ]
-
-  //   const video = {
-  //     title,
-  //     description,
-  //     URI,
-  //     createdAt: new Date(),
-  //     createdBy: bundlrInstance.address,
-  //   }
-
-  //   try {
-  //     let tx = await bundlrInstance.createTransaction(JSON.stringify(video), {
-  //       tags,
-  //     })
-  //     await tx.sign()
-  //     const { data } = await tx.upload()
-
-  //     console.log(`http://arweave.net/${data.id}`)
-  //     setMetadataSaved(true)
-
-  //     // setTimeout(() => {
-  //     //   router.push('/')
-  //     // }, 2000)
-  //   } catch (err) {
-  //     console.log('error uploading video with metadata: ', err)
-  //   }
-  // }
-
   // save the video metadata to Smart Contract
   async function saveFileMetadata() {
     if (!URI || !title || !sellPrice) return
@@ -196,7 +163,7 @@ export default function Home() {
                   </h4>
                   <button
                     className="w-auto px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                    onClick={() => uploadFile}
+                    onClick={uploadFile}
                   >
                     Upload File
                   </button>
@@ -252,7 +219,7 @@ export default function Home() {
                   </div>
 
                   <button
-                    onClick={() => saveFileMetadata()}
+                    onClick={saveFileMetadata}
                     type="button"
                     className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                   >
@@ -288,7 +255,7 @@ export default function Home() {
           <div className="">
             <button
               type="button"
-              onClick={() => initialiseBundlr()}
+              onClick={initialiseBundlr}
               className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
               <svg

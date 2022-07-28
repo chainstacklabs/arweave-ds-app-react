@@ -2,27 +2,25 @@ import { useEffect, useState, useContext } from 'react'
 import { MainContext } from '../globalContext'
 
 export default function OwnedFiles() {
-  const { contract, contractGetter, bundlrInstance } = useContext(MainContext)
-  const [ownedFiles, setOwnedFiles] = useState()
+  const {
+    contract,
+    contractGetter,
+    bundlrInstance,
+    ownedFiles,
+    getOwnedFiles,
+  } = useContext(MainContext)
 
-  // when app loads, fetch videos
+  const wait = (ms) => new Promise((res) => setTimeout(res, ms))
+
+  // when app loads, fetch files user has bought
   useEffect(() => {
-    getOwnedFiles()
+    // getOwnedFiles()
   }, [])
 
-  async function getOwnedFiles() {
-    try {
-      const files = await contractGetter.getOwnedFiles()
-      console.log('owned files', files)
-      setOwnedFiles(files)
-    } catch (error) {
-      console.error('ERROR GETTING FILES INFO', error)
-    }
-  }
-
   return (
-    <div>
-      <h2 className="my-16 text-2xl font-medium">Owned Files</h2>
+    <div className="pb-16 pt-8 border-t">
+      <h2 className="mt-16 mb-8 text-2xl font-medium">Owned Files</h2>
+      <p>This is the list of files that you've already bought</p>
       <div className="container mx-auto grid md:grid-cols-3 gap-4 ">
         {ownedFiles &&
           ownedFiles.map((file) => (
@@ -34,12 +32,12 @@ export default function OwnedFiles() {
                 </p>
               </div>
               {/* <p className="text-base">{file.description}</p> */}
-              <button
+              <a
                 className="w-auto px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                onClick={() => buyFile(file.id, file.price)}
+                href="#"
               >
-                Buy file
-              </button>
+                Download
+              </a>
               <p className="text-sm my-4">{file.buyers.length} buyers</p>
             </div>
           ))}
