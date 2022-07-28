@@ -8,9 +8,15 @@ The application allows users to upload documents to Arweave, a decentralized per
 
 Built with React (Next.js), TailwindCSS, Arweave and Solidity smart contracts deployed on Polygon.
 
-### Getting Started
+### Smart contract
 
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+This app uses a smart contract deployed in Polygon. This contract holds the metadata of the files listed to sell and allows users to buy them.
+
+To compile and run the contract tests run `npm run test`. The compiled contract artifacts will be created on the `/artifacts` folder (included in the build).
+
+### Front end
+
+This app is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 First, install all dependencies with `npm i` and run the development server:
 
