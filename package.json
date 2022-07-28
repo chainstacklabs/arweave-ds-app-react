@@ -6,15 +6,32 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "npx hardhat test",
+    "deploy:local": "npx hardhat run ./solidity/scripts/deploy.js --network localhost",
+    "deploy:test": "npx hardhat run ./solidity/scripts/deploy.js --network mumbai",
+    "deploy:prod": "npx hardhat run ./solidity/scripts/deploy.js --network polygon"
   },
   "dependencies": {
+    "@bundlr-network/client": "^0.7.15",
+    "@nomiclabs/hardhat-ethers": "^2.1.0",
+    "@tailwindcss/forms": "^0.5.2",
+    "arweave": "^1.11.4",
+    "chai": "^4.3.6",
+    "dotenv": "^16.0.1",
+    "ethers": "^5.6.9",
     "next": "12.2.2",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   },
   "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^1.0.2",
+    "@openzeppelin/test-helpers": "^0.5.15",
+    "autoprefixer": "^10.4.7",
     "eslint": "8.20.0",
-    "eslint-config-next": "12.2.2"
+    "eslint-config-next": "12.2.2",
+    "hardhat": "^2.10.1",
+    "postcss": "^8.4.14",
+    "tailwindcss": "^3.1.6"
   }
 }

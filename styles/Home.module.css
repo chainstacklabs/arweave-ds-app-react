@@ -12,21 +12,7 @@
   align-items: center;
 }
 
-.footer {
-  display: flex;
-  flex: 1;
-  padding: 2rem 0;
-  border-top: 1px solid #eaeaea;
-  justify-content: center;
-  align-items: center;
-}
 
-.footer a {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-grow: 1;
-}
 
 .title a {
   color: #0070f3;
@@ -113,4 +99,13 @@
     width: 100%;
     flex-direction: column;
   }
+}
+
+.fileInput{
+  height: 50vh;
+  width: 70vh;
+  border: 1px solid orange;
+  border-radius: 5%;
+  /* padding-top: 30%; */
+  padding: 20%;
 }
