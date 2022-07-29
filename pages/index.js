@@ -7,7 +7,7 @@ import { useState, useContext } from 'react'
 import { utils } from 'ethers'
 
 import { APP_NAME } from '../arweave'
-import OwnedFiles from '../components/OwnedFiles'
+import BoughtFiles from '../components/BoughtFiles'
 
 export default function Home() {
   const {
@@ -248,7 +248,7 @@ export default function Home() {
                 contractGetter,
               }}
             > */}
-            <OwnedFiles />
+            <BoughtFiles />
             {/* </MainContext.Provider> */}
           </div>
         ) : (

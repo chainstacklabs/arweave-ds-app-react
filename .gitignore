@@ -35,3 +35,6 @@ Notes.md
 tests.md
 
 .env
+.env.local
+.env.development
+.env.production

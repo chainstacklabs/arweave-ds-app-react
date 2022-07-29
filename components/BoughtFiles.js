@@ -1,7 +1,7 @@
 import { useEffect, useState, useContext } from 'react'
 import { MainContext } from '../globalContext'
 
-export default function OwnedFiles() {
+export default function BoughtFiles() {
   const {
     contract,
     contractGetter,
