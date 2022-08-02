@@ -16,18 +16,20 @@ function MyApp({ Component, pageProps }) {
   const [contract, setContract] = useState()
   const [contractGetter, setContractGetter] = useState()
 
-  const [ownedFiles, setOwnedFiles] = useState()
+  const [ownedFiles, setOwnedFiles] = useState([])
 
-  // polygon mainner
+  const [showAppMessage, setShowAppMessage] = useState(false)
+  const [appMessage, setAppMessage] = useState('')
+  const [appMessageIsError, setAppMessageIsError] = useState(false)
+
+  // polygon mainnet
   // const targetNetworkId = '0x89'
   // polygon mumbai testnet
   // const targetNetworkId = '0x13881'
   // localhost
   const targetNetworkId = '0x7a69'
 
-  const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS || 'nothing'
-  // '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512'
-  // '0x5FbDB2315678afecb367f032d93F642f64180aa3'
+  const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS || '0x0'
 
   let provider
 
@@ -96,7 +98,8 @@ function MyApp({ Component, pageProps }) {
       console.log('owned files', files)
       setOwnedFiles(files)
     } catch (error) {
-      console.error('ERROR GETTING FILES INFO', error)
+      setOwnedFiles([])
+      console.log('ERROR or NO FILES FOUND: ', error)
     }
   }
 
@@ -129,6 +132,12 @@ function MyApp({ Component, pageProps }) {
 
   const switchOrAdd = () => {
     props.isNewNetwork ? addNetwork() : switchNetwork()
+  }
+
+  function clearNotification() {
+    setShowAppMessage(false)
+    setAppMessage('')
+    setAppMessageIsError(false)
   }
 
   return (
@@ -166,10 +175,39 @@ function MyApp({ Component, pageProps }) {
         </div>
       </nav>
       <main className="max-w-7xl mx-auto text-center mb-auto">
-        <h1 className="text-4xl font-bold mb-2">Drop & sell</h1>
+        <h1 className="text-4xl font-bold mb-2">
+          Decentralised music marketplace
+        </h1>
         <h2 className="text-xl font-medium mb-12">
           powered by <span className="text-blue-500">Arweave + Polygon!</span>
         </h2>
+        <p className="text-lg font-medium text-blue-600 mb-4">
+          List your MP3 files and sell them with no royalties
+        </p>
+        {showAppMessage && (
+          <div className="px-12 pb-12">
+            <div
+              className="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded relative"
+              role="alert"
+            >
+              <span className="block sm:inline mr-8">{appMessage}</span>
+              <button
+                className="absolute top-0 bottom-0 right-0 ml-12"
+                onClick={clearNotification}
+              >
+                <svg
+                  className="fill-current h-6 w-6 text-blue-500"
+                  role="button"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                >
+                  <title>Close</title>
+                  <path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        )}
         {/* wraps Component in MainContext to share app state */}
         <MainContext.Provider
           value={{
@@ -185,6 +223,11 @@ function MyApp({ Component, pageProps }) {
             contractGetter,
             ownedFiles,
             getOwnedFiles,
+            showAppMessage,
+            setShowAppMessage,
+            appMessage,
+            setAppMessage,
+            setAppMessageIsError,
           }}
         >
           <Component {...pageProps} />

@@ -42,7 +42,7 @@ export default function Browse() {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <h2 className="mb-4 font-medium text-2xl">Files listed to sale</h2>
+      <h2 className="my-4 font-medium text-2xl">🎶 Songs listed to sale</h2>
       {error && <p>{error}</p>}
       <p className="text-sm mb-4">
         There are {files.length} files listed to sell

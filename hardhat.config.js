@@ -15,13 +15,13 @@ module.exports = {
     },
     polygon: {
       // Polygon network
-      url: 'https://api.polygon.io/v1/',
-      accounts: [],
+      url: process.env.MAINNET_RPC,
+      accounts: [process.env.DEPLOY_KEY],
     },
     mumbai: {
       // Mumbai network
-      url: 'https://api.polygon.io/v1/',
-      accounts: [],
+      url: process.env.MUMBAI_RPC,
+      accounts: [process.env.DEPLOY_KEY],
     },
   },
 }

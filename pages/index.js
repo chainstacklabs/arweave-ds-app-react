@@ -56,7 +56,7 @@ export default function Home() {
   async function uploadFile() {
     if (!file) return
     const tags = [
-      { name: 'Content-Type', value: 'application/pdf' },
+      { name: 'Content-Type', value: 'audio/mpeg3' },
       { name: 'App-Name', value: APP_NAME },
     ]
     try {
@@ -68,13 +68,18 @@ export default function Home() {
       setURI(`http://arweave.net/${tx.data.id}`)
       setFileUploaded(true)
     } catch (err) {
-      console.log('Error uploading video: ', err)
+      console.log('Error uploading file: ', err)
     }
   }
 
   async function fundBundlr(amount) {
-    console.log('res', amount)
-    await bundlrInstance.fund(parseInt(amount))
+    try {
+      console.log('funding bundlr with: ', amount)
+      const res = await bundlrInstance.fund(parseInt(amount))
+      console.log('fund response: ', res)
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   async function checkUploadCost(bytes) {
@@ -100,14 +105,25 @@ export default function Home() {
   async function saveFileMetadata() {
     if (!URI || !title || !sellPrice) return
 
-    const amountFormatted = utils.parseUnits(sellPrice, 18)
-    console.log(`Listing file ${title} for ${amountFormatted}`)
+    // const amountFormatted =
+    console.log(`Listing file ${title} for ${sellPrice}`)
 
     // save info in contract
-    const tx = await contract.listFile(title, amountFormatted, URI)
+    const tx = await contract.listFile(
+      title,
+      // sellPrice,
+      utils.parseUnits(sellPrice, 18),
+      URI
+    )
     console.log('tx', tx)
     const res = await tx.wait()
     console.log('res', res)
+
+    // reset everything in form
+    setTitle('')
+    setSellPrice('')
+    setURI('')
+    setFileUploaded(false)
 
     const files = await contract.getFiles()
     console.log('files', files)
@@ -128,15 +144,15 @@ export default function Home() {
         {bundlrInstance ? (
           <div className="w-full flex flex-col ">
             <div className="my-12">
-              <p>
-                Drop a file to upload it to Arweave. Once uploaded you can list
-                it for sale on Polygon.
+              <p className="mb-4">
+                Drop an MP3 file to upload it to. Once uploaded, enter the title
+                and price to list if for sale on Polygon.
               </p>
               {/* <p>Connected {address}</p> */}
-              <p className="">
+              <p className="text-sm">
                 Your wallet balance is: {Math.round(balance * 100) / 100}
               </p>
-              <p>
+              <p className="text-sm">
                 Your bundlr balance is: {Math.round(bundlrBalance * 100) / 100}
               </p>
             </div>
@@ -144,11 +160,12 @@ export default function Home() {
               <input
                 type="file"
                 className="hidden"
+                accept="audio/mpeg3"
                 name="file"
                 id="file"
                 onChange={onFileChange}
               ></input>
-              <label htmlFor="file" className="text-gray-500">
+              <label htmlFor="file" className="text-gray-500 cursor-pointer">
                 Drop files here
               </label>
             </div>
@@ -157,10 +174,10 @@ export default function Home() {
 
               {/* display calculated upload cast */}
               {fileCost && !fileUploaded && (
-                <div>
-                  <h4>
+                <div className="pb-8">
+                  <p className="text-sm mb-4">
                     Cost to upload: {Math.round(fileCost * 1000) / 1000} MATIC
-                  </h4>
+                  </p>
                   <button
                     className="w-auto px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                     onClick={uploadFile}
@@ -186,27 +203,27 @@ export default function Home() {
                   <div>
                     <label
                       htmlFor="title"
-                      class="block text-sm font-medium text-gray-700"
+                      className="block text-sm font-medium text-gray-700"
                     >
                       Title
                     </label>
-                    <div class="mt-1 mb-4">
+                    <div className="mt-1 mb-4">
                       <input
                         type="text"
                         name="title"
                         id="title"
-                        class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                        className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
                         placeholder="My awesome file"
                         onChange={(e) => setTitle(e.target.value)}
                       />
                     </div>
                     <label
                       htmlFor="description"
-                      class="block text-sm font-medium text-gray-700"
+                      className="block text-sm font-medium text-gray-700"
                     >
                       Price in Matic
                     </label>
-                    <div class="mt-1 mb-6">
+                    <div className="mt-1 mb-6">
                       <input
                         type="number"
                         name="Price"
@@ -225,15 +242,15 @@ export default function Home() {
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      class="h-6 w-6 mr-2"
+                      className="h-6 w-6 mr-2"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
-                      stroke-width="2"
+                      strokeWidth="2"
                     >
                       <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
                         d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
                       />
                     </svg>
@@ -242,14 +259,8 @@ export default function Home() {
                 </div>
               )}
             </div>
-            {/* <MainContext.Provider
-              value={{
-                contract,
-                contractGetter,
-              }}
-            > */}
+
             <BoughtFiles />
-            {/* </MainContext.Provider> */}
           </div>
         ) : (
           <div className="">

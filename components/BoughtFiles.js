@@ -10,17 +10,19 @@ export default function BoughtFiles() {
     getOwnedFiles,
   } = useContext(MainContext)
 
-  const wait = (ms) => new Promise((res) => setTimeout(res, ms))
-
   // when app loads, fetch files user has bought
   useEffect(() => {
-    // getOwnedFiles()
+    getOwnedFiles()
   }, [])
 
   return (
     <div className="pb-16 pt-8 border-t">
       <h2 className="mt-16 mb-8 text-2xl font-medium">Owned Files</h2>
-      <p>This is the list of files that you've already bought</p>
+      {ownedFiles.length > 0 ? (
+        <p>This is the list of files that you've already bought</p>
+      ) : (
+        <p>You haven't bought any files yet</p>
+      )}
       <div className="container mx-auto grid md:grid-cols-3 gap-4 ">
         {ownedFiles &&
           ownedFiles.map((file) => (
