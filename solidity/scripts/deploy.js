@@ -5,13 +5,16 @@ const main = async () => {
   console.log('Deploying contract with account: ', deployer.address)
   console.log('Account balance: ', accountBalance.toString())
 
-  let contractFactory = await hre.ethers.getContractFactory('DropAndSell')
+  let contractFactory = await hre.ethers.getContractFactory('MusicMarketplace')
   // no params in constructor
   let contract = await contractFactory.deploy()
 
   await contract.deployed()
 
-  console.log('contract DropAndSell deployed to address: ', contract.address)
+  console.log(
+    'contract MusicMarketplace deployed to address: ',
+    contract.address
+  )
 }
 
 const runMain = async () => {
