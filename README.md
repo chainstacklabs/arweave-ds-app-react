@@ -1,8 +1,13 @@
-# Drop n' Sell
+# Decentralized music marketplace
 
-This repository contains the code neccessary to run the Drop & Sell app, a decentralized app to sell digital documents like ebooks and pdf files.
+This repository contains the code neccessary to run a decentralized music marketplace app.
 
-The application allows users to upload documents to Arweave, a decentralized permanent data store, and list them to sell on Polygon thanks to a smart contract deployed on the blockchain.
+- Users will be able to upload MP3 files and list them for sale by a price.
+- The songs will be uploaded to Arweave via Bundlr and the metadata (title, price, author and download link) will be stored in a smart contract deployed in Polygon.
+- Other users will bee able to browse listed songs and buy them.
+- When a user buys a song, the tokens will be sent to the author and the buyer will get a link to download the it.
+
+We'll limit this app to MP3 files. In addition, the songs will be bought and sold using MATIC, but you can extend this app to work with other file types and multiple protocols if you want.
 
 ## Tech stack
 
@@ -10,7 +15,7 @@ Built with React (Next.js), TailwindCSS, Arweave and Solidity smart contracts de
 
 ### Smart contract
 
-This app uses a smart contract deployed in Polygon. This contract holds the metadata of the files listed to sell and allows users to buy them.
+This app uses a smart contract deployed in Polygon. This contract holds the metadata of the songs listed to sell and allows users to buy them.
 
 To compile and run the contract tests run `npm run test`. The compiled contract artifacts will be created on the `/artifacts` folder (included in the build).
 
