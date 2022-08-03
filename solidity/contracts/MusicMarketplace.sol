@@ -39,7 +39,7 @@ contract MusicMarketplace {
         require(songs.length >= _id, "The song does not exist");
         _;
     }
-
+    // checks if msg.sender is included in buyers list of song _id
     modifier isBuyer(uint256 _id) {
         require(songs[_id].buyers.length > 0, "The song has no buyers");
 
@@ -63,15 +63,20 @@ contract MusicMarketplace {
         Song memory song;
 
         song.id = songs.length;
-        // save price in wei
-        song.price = _price; //* 10 * 18;
+        // save price and other info to song struct
+        song.price = _price;
         song.author = msg.sender;
         song.title = _title;
+        // create array to store buyers and
+        // include the author
+        address[] memory buyers = new address[](1);
+        buyers[0] = msg.sender;
+        // save buyers to song struct
+        song.buyers = buyers;
         // save to list of songs
         songs.push(song);
 
         // save the file's arweave URI in private mapping
-        // filePaths.push(_arweaveURI);
         console.log("Listing file with id", song.id);
         songDownloadURLs[song.id] = _arweaveURI;
 
@@ -126,6 +131,15 @@ contract MusicMarketplace {
         isBuyer(_id)
         returns (string memory)
     {
+        bool userIsBuyer = false;
+        for (uint256 x = 0; x < songs[_id].buyers.length; x++) {
+            if (songs[_id].buyers[x] == msg.sender) {
+                console.log("Found buyer: ", songs[_id].buyers[x]);
+                userIsBuyer = true;
+            }
+        }
+        require(userIsBuyer, "You do not own this song.");
+
         return songDownloadURLs[_id];
     }
 
