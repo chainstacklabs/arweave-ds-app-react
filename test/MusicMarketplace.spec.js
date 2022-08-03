@@ -51,6 +51,13 @@ describe('MusicMarketplace', () => {
     expect(files[1].title).to.equal('Title Two')
     expect(files[0].price).to.equal(10)
     expect(files[1].price).to.equal(11)
+    expect(files[0].buyers.length).to.equal(1)
+    expect(files[1].buyers.length).to.equal(1)
+    expect(files[0].buyers).to.include(owner.address)
+    expect(files[0].author).to.equal(owner.address)
+
+    expect(files[1].buyers).to.include(owner.address)
+    expect(files[1].author).to.equal(owner.address)
   })
 
   it('fails if user tries to buy his own song', async () => {
@@ -83,8 +90,8 @@ describe('MusicMarketplace', () => {
     expect(owned.length).to.equal(1)
     expect(owned[0].title).to.equal('Title of my song')
     expect(owned[0].price).to.equal(10)
-    expect(owned[0].buyers.length).to.equal(1)
-    expect(owned[0].buyers[0]).to.equal(user1.address)
+    expect(owned[0].buyers.length).to.equal(2)
+    expect(owned[0].buyers).to.include(user1.address)
     const link = await mmContract.connect(user1).getDownloadLink(0)
     console.log('link', link)
     expect(link).to.equal('http://arweave.com/123123')
@@ -105,5 +112,9 @@ describe('MusicMarketplace', () => {
   it('allows users to retrieve all the files they bought', async () => {
     const files = await mmContract.connect(user1).getBoughtSongs()
     expect(files.length).to.equal(1)
+  })
+  it('allows author to retrieve song link when there is no buyers', async () => {
+    const link = await mmContract.getDownloadLink(1)
+    expect(link).to.equal('http://arweave.com/12312334')
   })
 })
