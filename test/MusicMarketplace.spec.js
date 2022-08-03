@@ -96,6 +96,11 @@ describe('MusicMarketplace', () => {
     console.log('link', link)
     expect(link).to.equal('http://arweave.com/123123')
   })
+  it('fails if user tries to buy song that he already owns', async () => {
+    await expect(mmContract.connect(user1).buySong(0)).to.be.revertedWith(
+      'You already own this song'
+    )
+  })
   it('prevents non buyers to check download link', async () => {
     await expect(
       mmContract.connect(user3).getDownloadLink(0)

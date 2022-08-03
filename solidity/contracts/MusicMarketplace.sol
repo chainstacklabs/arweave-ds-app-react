@@ -54,6 +54,21 @@ contract MusicMarketplace {
         _;
     }
 
+    // checks if msg.sender is included in buyers list of song _id
+    modifier isNotBuyer(uint256 _id) {
+        require(songs[_id].buyers.length > 0, "The song has no buyers");
+
+        bool userIsNotBuyer = true;
+        for (uint256 x = 0; x < songs[_id].buyers.length; x++) {
+            if (songs[_id].buyers[x] == msg.sender) {
+                console.log("Found buyer: ", songs[_id].buyers[x]);
+                userIsNotBuyer = false;
+            }
+        }
+        require(userIsNotBuyer, "You already own this song");
+        _;
+    }
+
     function listSong(
         string memory _title,
         uint256 _price,
@@ -88,6 +103,7 @@ contract MusicMarketplace {
         payable
         songExists(_id)
         isNotAuthor(_id)
+        isNotBuyer(_id)
     {
         // check if user sent enough funds
         require(msg.value >= songs[_id].price, "Not enough funds");
