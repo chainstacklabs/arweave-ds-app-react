@@ -172,7 +172,7 @@ function MyApp({ Component, pageProps }) {
   return (
     <div className="flex flex-col h-screen justify-between">
       <nav className="w-full p-4 flex justify-around mb-8">
-        <a
+        {/* <a
           href="https://chainstack.com"
           target="_blank"
           rel="noopener noreferrer"
@@ -185,7 +185,7 @@ function MyApp({ Component, pageProps }) {
               height={25}
             />
           </span>
-        </a>
+        </a> */}
         {bundlrInstance && (
           <div className="flex items-center justify-between sm:items-stretch sm:justify-start gap-8">
             <Link
@@ -268,13 +268,14 @@ function MyApp({ Component, pageProps }) {
           <Component {...pageProps} />
         </MainContext.Provider>
       </main>
-      <footer className="text-right p-2 border-t pt-4 px-2">
+      <footer className="text-right p-2 border-t pt-4 px-2 text-blue-500">
         <a
           href="https://chainstack.com"
           target="_blank"
           rel="noopener noreferrer"
         ></a>
         <span className={styles.logo}>
+          Powered by{' '}
           <Image
             src="/chainstack.png"
             alt="Chainstack Logo"
