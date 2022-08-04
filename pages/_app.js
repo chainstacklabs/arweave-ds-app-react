@@ -6,7 +6,9 @@ import { WebBundlr } from '@bundlr-network/client'
 import { providers, utils, Contract } from 'ethers'
 import { useState, useRef } from 'react'
 import { MainContext } from '../globalContext'
-import DropAndSell from '../artifacts/solidity/contracts/DropAndSell.sol/DropAndSell.json'
+import MusicMarketplace from '../artifacts/solidity/contracts/MusicMarketplace.sol/MusicMarketplace.json'
+
+import { useRouter } from 'next/router'
 
 function MyApp({ Component, pageProps }) {
   const [bundlrInstance, setBundlrInstance] = useState()
@@ -16,11 +18,16 @@ function MyApp({ Component, pageProps }) {
   const [contract, setContract] = useState()
   const [contractGetter, setContractGetter] = useState()
 
+  const [songs, setSongs] = useState([])
+  const [error, setError] = useState()
+
   const [ownedFiles, setOwnedFiles] = useState([])
 
   const [showAppMessage, setShowAppMessage] = useState(false)
   const [appMessage, setAppMessage] = useState('')
   const [appMessageIsError, setAppMessageIsError] = useState(false)
+
+  const router = useRouter()
 
   // polygon mainnet
   // const targetNetworkId = '0x89'
@@ -66,16 +73,30 @@ function MyApp({ Component, pageProps }) {
     bundlrRef.current = bundlr
     await initContractInterface()
     await fetchBalance()
-    await getOwnedFiles()
+    // await getOwnedFiles()
+    // redirect to browse page
+    router.push('/browse')
   }
 
   async function initContractInterface() {
     const signer = provider.getSigner()
-    const contract = new Contract(contractAddress, DropAndSell.abi, signer)
-    const contractG = new Contract(contractAddress, DropAndSell.abi, provider)
+    const metamaskAddress = await signer.getAddress()
+    console.log('metamaskAddress', metamaskAddress)
+    setAddress(metamaskAddress)
+    const contract = new Contract(contractAddress, MusicMarketplace.abi, signer)
+    const contractG = new Contract(
+      contractAddress,
+      MusicMarketplace.abi,
+      provider
+    )
     setContract(contract)
     setContractGetter(contractG)
     contractRef.current = contractG
+  }
+
+  function accShort() {
+    if (!address) return
+    return `${address.slice(0, 2)}...${address.slice(-4)}`
   }
 
   // get the user's bundlr balance
@@ -84,7 +105,7 @@ function MyApp({ Component, pageProps }) {
     // console.log('bal', bal)
     console.log('bundlr balance: ', utils.formatEther(bal.toString()))
     setbundlrBalance(utils.formatEther(bal.toString()))
-    setAddress(bundlrRef.current.address)
+    // setAddress(bundlrRef.current.address)
     const balance = await provider.getBalance(bundlrRef.current.address)
     console.log('balance : ', utils.formatEther(balance.toString()))
     setBalance(utils.formatEther(balance.toString()))
@@ -94,7 +115,7 @@ function MyApp({ Component, pageProps }) {
     try {
       console.log('Retrieving bought files')
       console.log('contractGetter >> ', contractRef.current)
-      const files = await contractRef.current.getBoughtFiles()
+      const files = await contractRef.current.getBoughtSongs()
       console.log('owned files', files)
       setOwnedFiles(files)
     } catch (error) {
@@ -122,7 +143,7 @@ function MyApp({ Component, pageProps }) {
           // refresh
           // window.location.reload()
         } catch (error) {
-          alert('Connect to Polygon Mainnet')
+          alert('Wrong network!')
           return false
         }
       }
@@ -130,8 +151,16 @@ function MyApp({ Component, pageProps }) {
     }
   }
 
-  const switchOrAdd = () => {
-    props.isNewNetwork ? addNetwork() : switchNetwork()
+  // fetch listed files from contract
+  async function getSongs() {
+    try {
+      console.log('Retrieving songs')
+      // setSongs([])
+      const songs = await contractGetter.getSongs()
+      setSongs(songs)
+    } catch (error) {
+      console.error('ERROR GETTING FILE LIST: ', error)
+    }
   }
 
   function clearNotification() {
@@ -157,22 +186,25 @@ function MyApp({ Component, pageProps }) {
             />
           </span>
         </a>
-        <div className="flex items-center justify-between sm:items-stretch sm:justify-start gap-8">
-          <Link
-            href="/"
-            className="border-indigo-500 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-            aria-current="page"
-          >
-            Dashboard
-          </Link>
+        {bundlrInstance && (
+          <div className="flex items-center justify-between sm:items-stretch sm:justify-start gap-8">
+            <Link
+              href="/dashboard"
+              className="hover:underline border-indigo-500 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+              aria-current="page"
+            >
+              Dashboard
+            </Link>
 
-          <Link
-            href="/browse"
-            className="border-indigo-500 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-          >
-            Browse
-          </Link>
-        </div>
+            <Link
+              href="/browse"
+              className="hover:underline border-indigo-500 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+            >
+              Browse
+            </Link>
+            <span className="text-base">Acc {accShort()}</span>
+          </div>
+        )}
       </nav>
       <main className="max-w-7xl mx-auto text-center mb-auto">
         <h1 className="text-4xl font-bold mb-2">
@@ -228,6 +260,9 @@ function MyApp({ Component, pageProps }) {
             appMessage,
             setAppMessage,
             setAppMessageIsError,
+            songs,
+            setSongs,
+            getSongs,
           }}
         >
           <Component {...pageProps} />
