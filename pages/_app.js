@@ -21,6 +21,10 @@ function MyApp({ Component, pageProps }) {
   const [songs, setSongs] = useState([])
   const [error, setError] = useState()
 
+  const [URI, setURI] = useState()
+  const [fileUploaded, setFileUploaded] = useState(false)
+  const [metadataSaved, setMetadataSaved] = useState(false)
+
   const [ownedFiles, setOwnedFiles] = useState([])
 
   const [showAppMessage, setShowAppMessage] = useState(false)
@@ -34,7 +38,9 @@ function MyApp({ Component, pageProps }) {
   // polygon mumbai testnet
   // const targetNetworkId = '0x13881'
   // localhost
-  const targetNetworkId = '0x7a69'
+  // const targetNetworkId = '0x7a69'
+  // localhost 1337
+  const targetNetworkId = '0x539'
 
   const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS || '0x0'
 
@@ -111,18 +117,18 @@ function MyApp({ Component, pageProps }) {
     setBalance(utils.formatEther(balance.toString()))
   }
 
-  async function getOwnedFiles() {
-    try {
-      console.log('Retrieving bought files')
-      console.log('contractGetter >> ', contractRef.current)
-      const files = await contractRef.current.getBoughtSongs()
-      console.log('owned files', files)
-      setOwnedFiles(files)
-    } catch (error) {
-      setOwnedFiles([])
-      console.log('ERROR or NO FILES FOUND: ', error)
-    }
-  }
+  // async function getOwnedFiles() {
+  //   try {
+  //     console.log('Retrieving bought files')
+  //     console.log('contractGetter >> ', contractRef.current)
+  //     const files = await contractRef.current.getBoughtSongs()
+  //     console.log('owned files', files)
+  //     setOwnedFiles(files)
+  //   } catch (error) {
+  //     setOwnedFiles([])
+  //     console.log('ERROR or NO FILES FOUND: ', error)
+  //   }
+  // }
 
   // checks if current chain matches with the target
   async function checkNetwork() {
@@ -172,35 +178,18 @@ function MyApp({ Component, pageProps }) {
   return (
     <div className="flex flex-col h-screen justify-between">
       <nav className="w-full p-4 flex justify-around mb-8">
-        {/* <a
-          href="https://chainstack.com"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <span className={styles.logo}>
-            <Image
-              src="/chainstack.png"
-              alt="Chainstack Logo"
-              width={150}
-              height={25}
-            />
-          </span>
-        </a> */}
         {bundlrInstance && (
           <div className="flex items-center justify-between sm:items-stretch sm:justify-start gap-8">
-            <Link
-              href="/dashboard"
-              className="hover:underline border-indigo-500 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-              aria-current="page"
-            >
-              Dashboard
+            <Link href="/dashboard">
+              <a className="  text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 border-white hover:border-b-2 hover:border-blue-700 text-sm font-medium">
+                Dashboard
+              </a>
             </Link>
 
-            <Link
-              href="/browse"
-              className="hover:underline border-indigo-500 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-            >
-              Browse
+            <Link href="/browse">
+              <a className=" text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 border-white hover:border-b-2 hover:border-blue-700 text-sm font-medium">
+                Browse
+              </a>
             </Link>
             <span className="text-base">Acc {accShort()}</span>
           </div>
@@ -247,14 +236,14 @@ function MyApp({ Component, pageProps }) {
             bundlrInstance,
             balance,
             fetchBalance,
-            currency,
-            setCurrency,
+            // currency,
+            // setCurrency,
             address,
             bundlrBalance,
             contract,
             contractGetter,
-            ownedFiles,
-            getOwnedFiles,
+            // ownedFiles,
+            // getOwnedFiles,
             showAppMessage,
             setShowAppMessage,
             appMessage,
@@ -263,6 +252,12 @@ function MyApp({ Component, pageProps }) {
             songs,
             setSongs,
             getSongs,
+            URI,
+            setURI,
+            fileUploaded,
+            setFileUploaded,
+            metadataSaved,
+            setMetadataSaved,
           }}
         >
           <Component {...pageProps} />
