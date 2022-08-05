@@ -17,7 +17,7 @@ Built with React (Next.js), TailwindCSS, Arweave and Solidity smart contracts de
 
 This app uses a smart contract deployed in Polygon. This contract holds the metadata of the songs listed to sell and allows users to buy them.
 
-To compile and run the contract tests run `npm run test`. The compiled contract artifacts will be created on the `/artifacts` folder (included in the build).
+To compile and run the contract tests run `npm run test`. The compiled contract artifacts will be generated on the `/artifacts` folder (included in the build).
 
 ### Front end
 
@@ -32,3 +32,7 @@ yarn dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+### Environment variables
+
+TBC
