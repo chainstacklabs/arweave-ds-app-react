@@ -33,20 +33,17 @@ function MyApp({ Component, pageProps }) {
 
   const router = useRouter()
 
-  // polygon mainnet
-  // const targetNetworkId = '0x89'
-  // polygon mumbai testnet
-  // const targetNetworkId = '0x13881'
-  // localhost
-  // const targetNetworkId = '0x7a69'
-  // localhost 1337
-  const targetNetworkId = '0x539'
+  // polygon mainnet '0x89'
+  // polygon mumbai '0x13881'
+  // localhost '0x7a69'
+  // localhost 1337 '0x539'
+  const targetNetworkId = process.env.NEXT_PUBLIC_TARGET_NETWORK
 
   const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS || '0x0'
 
   let provider
 
-  // set the base currency as matic (this can be changed later in the app)
+  // set the base currency as matic
   const [currency, setCurrency] = useState('matic')
   const bundlrRef = useRef()
   const contractRef = useRef()
@@ -64,11 +61,16 @@ function MyApp({ Component, pageProps }) {
     await provider._ready()
 
     console.log('Provider Ready! > ', provider)
-    const signer = provider.getSigner()
+
+    // load Bundlr endpoint from env or use testnet by default
+    const bundlrEndpoint =
+      process.env.NEXT_PUBLIC_BUNDLR_ENDPOINT ||
+      'https://testnet1.bundlr.network'
 
     const bundlr = new WebBundlr(
       // 'https://node1.bundlr.network',
-      'https://testnet1.bundlr.network',
+      // 'https://testnet1.bundlr.network',
+      bundlrEndpoint,
       currency,
       provider
     )
