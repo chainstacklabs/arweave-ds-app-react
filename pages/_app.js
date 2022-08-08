@@ -21,6 +21,10 @@ function MyApp({ Component, pageProps }) {
   const [songs, setSongs] = useState([])
   const [error, setError] = useState()
 
+  const [URI, setURI] = useState()
+  const [fileUploaded, setFileUploaded] = useState(false)
+  const [metadataSaved, setMetadataSaved] = useState(false)
+
   const [ownedFiles, setOwnedFiles] = useState([])
 
   const [showAppMessage, setShowAppMessage] = useState(false)
@@ -29,18 +33,17 @@ function MyApp({ Component, pageProps }) {
 
   const router = useRouter()
 
-  // polygon mainnet
-  // const targetNetworkId = '0x89'
-  // polygon mumbai testnet
-  // const targetNetworkId = '0x13881'
-  // localhost
-  const targetNetworkId = '0x7a69'
+  // polygon mainnet '0x89'
+  // polygon mumbai '0x13881'
+  // localhost '0x7a69'
+  // localhost 1337 '0x539'
+  const targetNetworkId = process.env.NEXT_PUBLIC_TARGET_NETWORK
 
   const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS || '0x0'
 
   let provider
 
-  // set the base currency as matic (this can be changed later in the app)
+  // set the base currency as matic
   const [currency, setCurrency] = useState('matic')
   const bundlrRef = useRef()
   const contractRef = useRef()
@@ -58,11 +61,16 @@ function MyApp({ Component, pageProps }) {
     await provider._ready()
 
     console.log('Provider Ready! > ', provider)
-    const signer = provider.getSigner()
+
+    // load Bundlr endpoint from env or use testnet by default
+    const bundlrEndpoint =
+      process.env.NEXT_PUBLIC_BUNDLR_ENDPOINT ||
+      'https://testnet1.bundlr.network'
 
     const bundlr = new WebBundlr(
       // 'https://node1.bundlr.network',
-      'https://testnet1.bundlr.network',
+      // 'https://testnet1.bundlr.network',
+      bundlrEndpoint,
       currency,
       provider
     )
@@ -111,18 +119,18 @@ function MyApp({ Component, pageProps }) {
     setBalance(utils.formatEther(balance.toString()))
   }
 
-  async function getOwnedFiles() {
-    try {
-      console.log('Retrieving bought files')
-      console.log('contractGetter >> ', contractRef.current)
-      const files = await contractRef.current.getBoughtSongs()
-      console.log('owned files', files)
-      setOwnedFiles(files)
-    } catch (error) {
-      setOwnedFiles([])
-      console.log('ERROR or NO FILES FOUND: ', error)
-    }
-  }
+  // async function getOwnedFiles() {
+  //   try {
+  //     console.log('Retrieving bought files')
+  //     console.log('contractGetter >> ', contractRef.current)
+  //     const files = await contractRef.current.getBoughtSongs()
+  //     console.log('owned files', files)
+  //     setOwnedFiles(files)
+  //   } catch (error) {
+  //     setOwnedFiles([])
+  //     console.log('ERROR or NO FILES FOUND: ', error)
+  //   }
+  // }
 
   // checks if current chain matches with the target
   async function checkNetwork() {
@@ -172,35 +180,18 @@ function MyApp({ Component, pageProps }) {
   return (
     <div className="flex flex-col h-screen justify-between">
       <nav className="w-full p-4 flex justify-around mb-8">
-        {/* <a
-          href="https://chainstack.com"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <span className={styles.logo}>
-            <Image
-              src="/chainstack.png"
-              alt="Chainstack Logo"
-              width={150}
-              height={25}
-            />
-          </span>
-        </a> */}
         {bundlrInstance && (
           <div className="flex items-center justify-between sm:items-stretch sm:justify-start gap-8">
-            <Link
-              href="/dashboard"
-              className="hover:underline border-indigo-500 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-              aria-current="page"
-            >
-              Dashboard
+            <Link href="/dashboard">
+              <a className="  text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 border-white hover:border-b-2 hover:border-blue-700 text-sm font-medium">
+                Dashboard
+              </a>
             </Link>
 
-            <Link
-              href="/browse"
-              className="hover:underline border-indigo-500 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-            >
-              Browse
+            <Link href="/browse">
+              <a className=" text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 border-white hover:border-b-2 hover:border-blue-700 text-sm font-medium">
+                Browse
+              </a>
             </Link>
             <span className="text-base">Acc {accShort()}</span>
           </div>
@@ -247,14 +238,14 @@ function MyApp({ Component, pageProps }) {
             bundlrInstance,
             balance,
             fetchBalance,
-            currency,
-            setCurrency,
+            // currency,
+            // setCurrency,
             address,
             bundlrBalance,
             contract,
             contractGetter,
-            ownedFiles,
-            getOwnedFiles,
+            // ownedFiles,
+            // getOwnedFiles,
             showAppMessage,
             setShowAppMessage,
             appMessage,
@@ -263,6 +254,12 @@ function MyApp({ Component, pageProps }) {
             songs,
             setSongs,
             getSongs,
+            URI,
+            setURI,
+            fileUploaded,
+            setFileUploaded,
+            metadataSaved,
+            setMetadataSaved,
           }}
         >
           <Component {...pageProps} />
