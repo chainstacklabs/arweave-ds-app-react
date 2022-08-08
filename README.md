@@ -62,4 +62,4 @@ You can deploy the contracts to Mumbai testnet or Polygon mainnet with `npm run 
 
 You can run the web app pointing to the contract deployed in testnet/mainnet following the instructions above, you just need to adapt the environment variables in the `.env.local` file.
 
-Youc an also deploy the web application Vercel or Netlify.
+You can also deploy the web application Vercel or Netlify.
