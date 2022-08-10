@@ -4,6 +4,7 @@ pragma solidity ^0.8.4;
 import "hardhat/console.sol";
 
 contract MusicMarketplace {
+    // Song struct
     struct Song {
         uint256 id;
         uint256 price;
@@ -11,11 +12,12 @@ contract MusicMarketplace {
         address[] buyers;
         string title;
     }
-
+    // array that stores all songs
     Song[] songs;
-
+    // stores all songs URLs
     mapping(uint256 => string) private songDownloadURLs;
 
+    // events
     event SongListed(uint256 indexed id, string title, uint256 price);
     event SongSold(uint256 indexed id, address buyer);
 
@@ -147,15 +149,6 @@ contract MusicMarketplace {
         isBuyer(_id)
         returns (string memory)
     {
-        // bool userIsBuyer = false;
-        // for (uint256 x = 0; x < songs[_id].buyers.length; x++) {
-        //     if (songs[_id].buyers[x] == msg.sender) {
-        //         console.log("Found buyer: ", songs[_id].buyers[x]);
-        //         userIsBuyer = true;
-        //     }
-        // }
-        // require(userIsBuyer, "You do not own this song.");
-
         return songDownloadURLs[_id];
     }
 
