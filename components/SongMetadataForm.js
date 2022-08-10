@@ -12,14 +12,14 @@ export default function SongMetadataForm({ URI }) {
 
   const [isLoading, setIsLoading] = useState(false)
 
-  // save the video metadata to Smart Contract
+  // save the song metadata to Smart Contract
   async function saveFileMetadata() {
     try {
       if (!URI || !title || !sellPrice) return
       setIsLoading(true)
 
       console.log(
-        `Listing file ${title} for ${utils.parseUnits(
+        `Listing song ${title} for ${utils.parseUnits(
           sellPrice,
           18
         )} and URI ${URI}`

@@ -106,7 +106,7 @@ describe('MusicMarketplace', () => {
       mmContract.connect(user3).getDownloadLink(0)
     ).to.be.revertedWith('You do not own this song.')
   })
-  it('allows buyers to check download link of owned file', async () => {
+  it('allows buyers to check download link of owned song', async () => {
     const link = await mmContract.connect(user1).getDownloadLink(0)
     expect(link).to.equal('http://arweave.com/123123')
   })
@@ -114,7 +114,7 @@ describe('MusicMarketplace', () => {
     const files = await mmContract.getOwnedSongs()
     expect(files.length).to.equal(2)
   })
-  it('allows users to retrieve all the files they bought', async () => {
+  it('allows users to retrieve all the songs they bought', async () => {
     const files = await mmContract.connect(user1).getBoughtSongs()
     expect(files.length).to.equal(1)
   })

@@ -147,14 +147,14 @@ contract MusicMarketplace {
         isBuyer(_id)
         returns (string memory)
     {
-        bool userIsBuyer = false;
-        for (uint256 x = 0; x < songs[_id].buyers.length; x++) {
-            if (songs[_id].buyers[x] == msg.sender) {
-                console.log("Found buyer: ", songs[_id].buyers[x]);
-                userIsBuyer = true;
-            }
-        }
-        require(userIsBuyer, "You do not own this song.");
+        // bool userIsBuyer = false;
+        // for (uint256 x = 0; x < songs[_id].buyers.length; x++) {
+        //     if (songs[_id].buyers[x] == msg.sender) {
+        //         console.log("Found buyer: ", songs[_id].buyers[x]);
+        //         userIsBuyer = true;
+        //     }
+        // }
+        // require(userIsBuyer, "You do not own this song.");
 
         return songDownloadURLs[_id];
     }

@@ -5,7 +5,7 @@ import { MainContext } from '../globalContext'
 import { useContext } from 'react'
 
 export default function Home() {
-  const { initialiseBundlr } = useContext(MainContext)
+  const { initWallet } = useContext(MainContext)
 
   return (
     <div className=" ">
@@ -22,7 +22,7 @@ export default function Home() {
         <div className="">
           <button
             type="button"
-            onClick={initialiseBundlr}
+            onClick={initWallet}
             className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
             <svg

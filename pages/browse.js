@@ -1,25 +1,15 @@
-import { query, arweave, createFileMeta } from '../arweave'
 import { MainContext } from '../globalContext'
 
 import Head from 'next/head'
 
 import Song from '../components/Song'
 
-import { useEffect, useState, useContext } from 'react'
+import { useEffect, useContext } from 'react'
 
 import Router from 'next/router'
 
-const wait = (ms) => new Promise((res) => setTimeout(res, ms))
-
 export default function Browse() {
-  const {
-    contract,
-    contractGetter,
-    bundlrInstance,
-    songs,
-    setSongs,
-    getSongs,
-  } = useContext(MainContext)
+  const { bundlrInstance, songs, getSongs } = useContext(MainContext)
 
   // when app loads, fetch songs
   useEffect(() => {
@@ -29,6 +19,7 @@ export default function Browse() {
   }, [])
 
   return (
+    // Render list of songs
     <div>
       <Head>
         <title>Browse | Drop & Sell</title>

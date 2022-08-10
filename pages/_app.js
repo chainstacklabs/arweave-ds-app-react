@@ -25,8 +25,6 @@ function MyApp({ Component, pageProps }) {
   const [fileUploaded, setFileUploaded] = useState(false)
   const [metadataSaved, setMetadataSaved] = useState(false)
 
-  const [ownedFiles, setOwnedFiles] = useState([])
-
   const [showAppMessage, setShowAppMessage] = useState(false)
   const [appMessage, setAppMessage] = useState('')
   const [appMessageIsError, setAppMessageIsError] = useState(false)
@@ -48,8 +46,11 @@ function MyApp({ Component, pageProps }) {
   const bundlrRef = useRef()
   const contractRef = useRef()
 
-  // create a function to connect to bundlr network
-  async function initialiseBundlr() {
+  /**
+   * Connects user's Metamask, initialise bundlr ineterface,
+   * contract interface and retrieves balances
+   */
+  async function initWallet() {
     if (!window.ethereum) return
 
     await window.ethereum.enable()
@@ -63,17 +64,13 @@ function MyApp({ Component, pageProps }) {
     console.log('Provider Ready! > ', provider)
 
     // load Bundlr endpoint from env or use testnet by default
+    // Mainnet is: 'https://node1.bundlr.network'
+    // Testnet is: 'https://testnet1.bundlr.network',
     const bundlrEndpoint =
       process.env.NEXT_PUBLIC_BUNDLR_ENDPOINT ||
       'https://testnet1.bundlr.network'
 
-    const bundlr = new WebBundlr(
-      // 'https://node1.bundlr.network',
-      // 'https://testnet1.bundlr.network',
-      bundlrEndpoint,
-      currency,
-      provider
-    )
+    const bundlr = new WebBundlr(bundlrEndpoint, currency, provider)
     await bundlr.ready()
     console.log('Bundlr provider ready')
 
@@ -81,7 +78,6 @@ function MyApp({ Component, pageProps }) {
     bundlrRef.current = bundlr
     await initContractInterface()
     await fetchBalance()
-    // await getOwnedFiles()
     // redirect to browse page
     router.push('/browse')
   }
@@ -148,8 +144,6 @@ function MyApp({ Component, pageProps }) {
             method: 'wallet_switchEthereumChain',
             params: [{ chainId: targetNetworkId }],
           })
-          // refresh
-          // window.location.reload()
         } catch (error) {
           alert('Wrong network!')
           return false
@@ -159,11 +153,12 @@ function MyApp({ Component, pageProps }) {
     }
   }
 
-  // fetch listed files from contract
+  /**
+   * fetchs songs listed for sale from the app smart contract
+   */
   async function getSongs() {
     try {
       console.log('Retrieving songs')
-      // setSongs([])
       const songs = await contractGetter.getSongs()
       setSongs(songs)
     } catch (error) {
@@ -234,18 +229,14 @@ function MyApp({ Component, pageProps }) {
         {/* wraps Component in MainContext to share app state */}
         <MainContext.Provider
           value={{
-            initialiseBundlr,
+            initWallet,
             bundlrInstance,
             balance,
             fetchBalance,
-            // currency,
-            // setCurrency,
             address,
             bundlrBalance,
             contract,
             contractGetter,
-            // ownedFiles,
-            // getOwnedFiles,
             showAppMessage,
             setShowAppMessage,
             appMessage,

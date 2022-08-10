@@ -49,7 +49,7 @@ export default function ArweaveUpload({}) {
   async function checkUploadCost(bytes) {
     if (bytes) {
       const cost = await bundlrInstance.getPrice(bytes)
-      console.log('cost is:', cost)
+      console.log('cost is:', cost.toString())
       setFileCost(utils.formatEther(cost.toString()))
 
       if (cost.isGreaterThan(bundlrBalance)) {
@@ -57,11 +57,6 @@ export default function ArweaveUpload({}) {
       } else {
         console.log('enough balance')
       }
-
-      console.log('balance', balance)
-      console.log('bundlrBalance', bundlrBalance)
-      console.log('fileCost', fileCost)
-      console.log('cost', cost)
     }
   }
 

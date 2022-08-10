@@ -13,6 +13,7 @@ export default function Song({ song }) {
     setAppMessageIsError,
   } = useContext(MainContext)
 
+  // tries to retrieve song URL on load
   useEffect(() => {
     getSongURL()
   }, [])
@@ -22,6 +23,10 @@ export default function Song({ song }) {
   const [songURL, setSongURL] = useState('')
   const [canPlay, setCanPlay] = useState(false)
 
+  /**
+   * Retrieves songURL from Arweave. Only author/buyers can
+   * call this method of the smart contract
+   */
   async function getSongURL() {
     try {
       const songURL = await contract.getDownloadLink(song.id)
@@ -31,14 +36,16 @@ export default function Song({ song }) {
       await getSongs()
       userCanPlay()
     } catch (e) {
-      console.log('e >> ', e)
+      console.log('Error retrieving song URL >> ', e)
     }
   }
 
   function accShort() {
     return `${song.author.slice(0, 2)}...${song.author.slice(-4)}`
   }
-
+  /**
+   * Check if user is author or one of the buyers
+   */
   function userCanPlay() {
     console.log('Checking if songs buyers include ', address)
     console.log('song.buyers: ', song.buyers)
@@ -50,15 +57,18 @@ export default function Song({ song }) {
       setCanPlay(false)
     }
   }
-
+  /**
+   * Buys song for user using the contract interface
+   * from app global state
+   */
   async function buySong() {
     try {
       setIsLoading(true)
       console.log(`Buying file ${song.id.toString()}`)
+      // trigger buySong method from smart contract
       const tx = await contract.buySong(song.id.toString(), {
         value: song.price,
       })
-      console.log('tx', tx)
       const res = await tx.wait()
       console.log('Transaction completed')
       setAppMessage('Song bought! You can listen it now 🎧🎶')
