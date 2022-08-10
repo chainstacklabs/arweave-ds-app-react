@@ -232,17 +232,16 @@ As we'll access a lot of state variables from multiple pages, like a contract an
 
 ### Dependencies
 
-Apart from the default Next.js dependencies, we'll need to use other packages to interact with Arweave, Bundlr etc. Here is the list of dependencies and what they're used for:
+Apart from the default Next.js dependencies, we'll need to use the Bundlr library to interact with Arweave through Bundlr. I also installed TailwindCSS to help styling the app.
 
-- `arweave`: NOT NEEDED? REMOVE AND CHECK
-- `@bundlr-network/client`: to upload files to arweave via Bundlr using other cryptocurrencies
-- `tailwindcss`: styling
+- `@bundlr-network/client`: [library documentation](https://docs.bundlr.network/docs/client/js)
+- `tailwindcss`: follow [installation guide here](https://tailwindcss.com/docs/installation)
 
 ### The landing page: connect wallet and fetch balance
 
 [VIDEO LANDING PAGE CONNECT WALLET]
 
-The index page has just a button to connect the user's wallet. As we'll be using Bundlr to interact with Arweave, we'll actually initialise a Bundlr intance using the Metamask provider, which is inyected in `window.ethereum` by default
+The landing page has just a button to connect the user's wallet that will trigger the `initWallet` below. As we'll be using Bundlr to interact with Arweave, we'll actually initialise a Bundlr intance using the Metamask provider, which is inyected in `window.ethereum` by default:
 
 ```js
 let provider
