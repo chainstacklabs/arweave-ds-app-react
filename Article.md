@@ -1,43 +1,49 @@
 # Building a decentralized music marketplace with Arweave and Polygon
 
-File storage is one of the big.... In web2 applications we have services like AWS S3 or Cloudinary that provide an easy way to upload and query files through simple to use APIs.
+File storage is one of those features required in most complex web apps. You're building an Instagram-like app? You need a file storage system for the photos. A Youtube-like app? You need that too. Almost any web2 app has a file storage system behind. And all those applications use services like AWS S3 or Cloudinary that provide an easy way to upload and query files through simple to use APIs.
 
-In the web3 space there are multiple projects tackling this problem with IPFS, Filecoin and Arweave being the ones leading the race.
+However, these solutions have the same problem as any other web2 app: they're not decentralised.
+
+In the web3 space there are multiple projects building decentralised data storage systems like IPFS, Filecoin and Arweave. In this article, we'll talk about the latter and explain **how to create a decentralised music marketplace that uses Arweave to store the song files.**
+
+Ready? Let's get to it 🤘
 
 ## Arweave in a nutsell?
 
-[Arweave](https://www.arweave.org/) is a decentralized storage network (DSN) and it allows user to upload any type of file and pay a single fee at the time of uploading. This is one of the key differences with other protocols like IPFS, where you have to keep a balance in you wallet to keep you files online.
+[Arweave](https://www.arweave.org/) is a decentralized storage network (DSN) and it allows users to upload any type of file and **pay a single fee at the time of uploading.** This is one of the key differences with other protocols like IPFS, where you have to make repeated payments to keep your files online.
 
-To upload data you need to pay using the Arweave native token, which you can buy it from different exchanges. In this article, we'll follow a different route using Bundlr (more on that later).
+In addition, Arweave stores data permanently, they're never deleted from the DSN. This has allowed different use cases, like the permaweb. You can use Arweave to host a website and, as the data is stored permanently, it'll never be censored so your website will always be available.
 
-In addition, Arweave stores data permanently, they're never deleted from the DSN. This has allowed different use cases, like the permaweb. You can use Arweave to host a website and, as the data is stored permanently, it'll never be censored.
+To upload files you need to pay using the Arweave native token, which you can buy from different exchanges. In this article, we'll follow a different route using Bundlr. Let's see how it works.
 
 ## Using Arweave with other tokens with Bundlr
 
-[Bundlr](https://bundlr.network/) is a protocol build on top of Arweave that aims to solve some of Arweave's native limitations. With Bundlr you can upload files to Arweave paying with different tokens like ETH, SOL, MATIC or AVAX to name a few.
+[Bundlr](https://bundlr.network/) is a protocol build on top of Arweave that aims to solve some of Arweave's native limitations. **Using Bundlr you can upload files to Arweave paying with different tokens like ETH, SOL, MATIC or AVAX to name a few.** This gives users a lot more flexibility and opens up the protocol to users from all these different networks.
 
-In addition, Bundlr uses bundles to reduce to cost of uploading files and even makes uploads free for files under 100kb.
+In addition, Bundlr uses bundles (😉) to reduce to cost of uploading files, and even makes **uploads free for files under 100kb.**
 
-You can [learn more about Bundlr in the docs](https://docs.bundlr.network/docs/overview).
+And finally, Bundlr provides [its own Javascript library](https://docs.bundlr.network/docs/client/js) that makes it super easy to interact with the protocol. Piece of cake 🍰
+
+You can [learn more about Bundlr in their docs](https://docs.bundlr.network/docs/overview).
 
 ### Transfering funds to Bundlr
 
-It's important to mention that **in order to upload files to Arweave using Bundlr, you need to transfer funds from you wallet to Bundlr.** You can do this in advance [using this app](https://demo.bundlr.network/) (not the greates design but you can trust it) or you can do it programmatically following [this section of the docs](https://docs.bundlr.network/docs/client/examples/funding-your-account).
+It's important to mention that **in order to upload files to Arweave using Bundlr, you need to transfer funds from you wallet to Bundlr.** You can do this in advance [using this app](https://demo.bundlr.network/) (not the greatest design but you can trust it) or you can do it programmatically following [this section of the docs](https://docs.bundlr.network/docs/client/examples/funding-your-account).
 
-For the decentralised music marketplace I decided to follow the [lazy-funding approach](https://docs.bundlr.network/docs/client/examples/funding-your-account#lazy-funding). That means: check if the user has transfered the funds in advance and, if not (or if the funds are not enough), it'll trigger the funding before actually uploading the file. Don't worry, we'll review that in detail later 😉
+For the decentralised music marketplace I decided to follow the [lazy-funding approach](https://docs.bundlr.network/docs/client/examples/funding-your-account#lazy-funding). That means: check if the user has transfered the funds in advance and, if not (or if the funds are not enough), trigger the funding before actually uploading the file. Don't worry, we'll review that in detail later 😉
 
-It's also worth mentioning that you can withdraw your funds as well.
+It's also worth mentioning that you can withdraw your funds from Bundlr to back to your wallet as well.
 
 ## Decentralized music marketplace overview
 
-To showcase Arweave and Bundlr, we're going to build a decentralized music marketplace app. Here is how it'll work:
+To showcase how to use Arweave and Bundlr, we're going to build a decentralized music marketplace app. Here is how it'll work:
 
 - Users will be able to upload MP3 files and list them for sale by a price.
 - The songs will be uploaded to Arweave via Bundlr and the metadata (title, price, author and download link) will be stored in a smart contract deployed in Polygon.
-- Other users will bee able to browse listed songs and buy them.
-- When a user buys a song, the tokens will be sent to the author and the buyer will get a link to download the it.
+- Other users will bee able to browse listed songs and buy them paying with MATIC
+- When a user buys a song, the MATIC will be sent to the author and the buyer will get a link to download the song or listen to it.
 
-We'll limit this app to MP3 files. In addition, the songs will be bought and sold using MATIC, but you can extend this app to work with other file types and multiple protocols if you want.
+We'll limit this app to MP3 files. In addition, the songs will be bought and sold using MATIC only, but you can extend this app to work with other file types and multiple protocols if you want. We'll give you some ideas at the end of this article 😉
 
 ### Tech stack
 
@@ -45,13 +51,15 @@ To build this project we'll use the following tech stack:
 
 - Solidity to write the smart contract.
 - Javascript to write smart contract tests and deployment script.
-- React / Next.js for the frontend.
+- React / Next.js for the web app.
 
 You can find the whole code for this app in [the following GitHub repository](https://github.com/chainstack/arweave-ds-app).
 
+Let's start coding 👨🏻‍💻
+
 ### Smart contract
 
-We need a smart contract to store the song's metadata: title, price, author and the URL to the song in Arweave.
+We need a smart contract to store the song's metadata: title, price, author and the each song's URL in Arweave.
 
 As we don't want all users to be able to see the URL of every song, we'll separate these into two different mappings, one with the public information (title, price and author) and another one `private` with the URL.
 
@@ -60,31 +68,29 @@ As we don't want all users to be able to see the URL of every song, we'll separa
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.4;
 
-contract DropAndSell {
-    // File public metadata
-    struct File {
+contract MusicMarketplace {
+    // Song struct
+    struct Song {
         uint256 id;
         uint256 price;
-        address owner;
+        address author;
         address[] buyers;
         string title;
     }
-
-    // public info of all files
-    File[] files;
-    // stores file URLs
-    mapping(uint256 => string) private filePaths;
+    // array that stores all songs
+    Song[] songs;
+    // stores all songs URLs
+    mapping(uint256 => string) private songDownloadURLs;
 
     // events
-    event FileListed(uint256 indexed id, string title, uint256 price);
-    event FileSold(uint256 indexed id, address buyer);
-
+    event SongListed(uint256 indexed id, string title, uint256 price);
+    event SongSold(uint256 indexed id, address buyer);
     //....
 
 }
 ```
 
-To list a song for sale, users will provide a title, price and the URL of the file in Arweave. Then we'll just save that information in the `files` and `filePaths` state variables as follows:
+To list a song for sale, users will provide a title, price and the URL of the file in Arweave. Then we'll just save that information in the `songs` and `songDownloadURLs` state variables as follows:
 
 ```js
      // save song info to songs array
@@ -116,9 +122,9 @@ To list a song for sale, users will provide a title, price and the URL of the fi
     }
 ```
 
-Notice that we're also saving the owner using the `msg.sender` variable and that we're also including it in the `buyers` array. We're doing this to make sure an author does not have to buy his own songs and to simplify things for our front end 😉
+Notice that we're also saving the owner using the `msg.sender` variable and that we're also including it in the `buyers` array. We're doing this to make sure an author does not have to buy his/her own songs and to simplify things for our frontend 😉
 
-To buy a song, we'd need a payable function that receives the amount of MATIC and the song id that the user wants to buy. We also need to do a few checks, like making sure the song id provided exists, that the buyer is not the author of the song, and that the user has not bought the song already. For that, we can create the following modifiers:
+To buy a song, we'd need a payable function that receives the amount of MATIC and the song id that the user wants to buy. We also need to do a few checks, like making sure the song id provided exists, that the buyer is not the author of the song, and that the user has not bought the song already. For that, I created the following modifiers:
 
 ```js
     // check if song id exists
@@ -178,7 +184,7 @@ Then we can use them in our `buySong` function. It will check that the amount se
     }
 ```
 
-The last important part of this contract is a function to retrieve the URL of the song's in Arweave. To run this song we'll create another modifier to make sure that only users that have actually bought the song can retrieve the URL:
+The last important part of this contract is a function to retrieve the URL of the song's in Arweave. To run this song I created another modifier to make sure that only users that have actually bought the song can retrieve the URL:
 
 ```js
 // checks if msg.sender is included in buyers list of song _id
