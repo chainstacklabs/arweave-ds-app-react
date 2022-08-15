@@ -1,4 +1,4 @@
-import { utils } from 'ethers'
+import { utils, BigNumber, FixedNumber } from 'ethers'
 import { useContext, useState, useEffect } from 'react'
 
 import { MainContext } from '../globalContext'
@@ -8,6 +8,7 @@ export default function Song({ song }) {
     contract,
     address,
     getSongs,
+    balance,
     setAppMessage,
     setShowAppMessage,
     setAppMessageIsError,
@@ -63,8 +64,18 @@ export default function Song({ song }) {
    */
   async function buySong() {
     try {
+      console.log('balance >> ', balance)
+      console.log('song.price >> ', song.price)
+      console.log('balance BN', FixedNumber.from(balance))
+      if (song.price.gt(FixedNumber.from(balance))) {
+        setAppMessage('You do not have enough funds to buy this song')
+        setShowAppMessage(true)
+        setAppMessageIsError(true)
+        setIsLoading(false)
+        return
+      }
       setIsLoading(true)
-      console.log(`Buying file ${song.id.toString()}`)
+      console.log(`Buying song with id ${song.id.toString()}`)
       // trigger buySong method from smart contract
       const tx = await contract.buySong(song.id.toString(), {
         value: song.price,
@@ -81,7 +92,7 @@ export default function Song({ song }) {
       setIsLoading(false)
     } catch (err) {
       console.error(err)
-      setAppMessage('Error buying song. Are you sure you are not the owner?')
+      setAppMessage('Error buying song 🤕')
       setShowAppMessage(true)
       setAppMessageIsError(true)
       setIsLoading(false)
@@ -94,9 +105,9 @@ export default function Song({ song }) {
         <h4 className="text-xl font-medium">
           <span className="text-base">{song.id.toString()}</span> | {song.title}
         </h4>
-        <p className="text-sm my-4">by {accShort()}</p>
+        <p className="text-sm mb-4">by {accShort()}</p>
         <p className="text-sm font-medium">
-          Price: {utils.formatEther(song.price)}
+          Price: {utils.formatEther(song.price)} MATIC
         </p>
       </div>
       {canPlay ? (
@@ -116,7 +127,11 @@ export default function Song({ song }) {
         </button>
       )}
 
-      <p className="text-sm my-4">{song.buyers.length} buyers</p>
+      <p className="text-sm my-4">
+        {song.author == address
+          ? `You're the author`
+          : `${song.buyers.length - 1} buyers`}
+      </p>
     </div>
   )
 }

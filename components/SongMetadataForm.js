@@ -1,7 +1,10 @@
-import { useContext, useState, useEffect } from 'react'
+import { useContext, useState } from 'react'
 import { MainContext } from '../globalContext'
 
 import { utils } from 'ethers'
+
+// to redirect after upload
+import Router from 'next/router'
 
 export default function SongMetadataForm({ URI }) {
   const { contract, setMetadataSaved, setURI, setFileUploaded } =
@@ -59,7 +62,7 @@ export default function SongMetadataForm({ URI }) {
   return (
     <div>
       <div className="pb-16">
-        <p className="mb-4">
+        <p className="mb-4 text-blue-600">
           File uploaded to{' '}
           <a
             className="hover:underline"
@@ -70,7 +73,7 @@ export default function SongMetadataForm({ URI }) {
             {URI}
           </a>
         </p>
-        <div>
+        <div className="max-w-xl mx-auto">
           <label
             htmlFor="title"
             className="block text-sm font-medium text-gray-700"
@@ -91,11 +94,11 @@ export default function SongMetadataForm({ URI }) {
             htmlFor="description"
             className="block text-sm font-medium text-gray-700"
           >
-            Price in Matic
+            Price in MATIC
           </label>
-          <div className="mt-1 mb-6">
+          <div className="mt-1 mb-6 w-32 mx-auto">
             <input
-              type="number"
+              type="text"
               name="Price"
               id="description"
               className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"

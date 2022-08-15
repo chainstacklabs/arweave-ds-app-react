@@ -1,6 +1,5 @@
-import { useContext, useState, useEffect } from 'react'
+import { useContext, useState } from 'react'
 import { MainContext } from '../globalContext'
-import { APP_NAME } from '../arweave'
 
 // to redirect after upload
 import Router from 'next/router'
@@ -66,7 +65,7 @@ export default function ArweaveUpload({}) {
     if (!file) return
     const tags = [
       { name: 'Content-Type', value: 'audio/mpeg3' },
-      { name: 'App-Name', value: APP_NAME },
+      { name: 'App-Name', value: 'DROP_N_SELL' },
     ]
     try {
       if (bundlrBalance < fileCost) {
@@ -104,8 +103,11 @@ export default function ArweaveUpload({}) {
           id="file"
           onChange={onFileChange}
         ></input>
-        <label htmlFor="file" className="text-gray-500 cursor-pointer">
-          Drop files here
+        <label
+          htmlFor="file"
+          className="text-gray-500 cursor-pointer w-full h-full py-20"
+        >
+          {localFile ? 'Replace song' : 'Add song'}
         </label>
       </div>
       <div className="flex flex-col space-y-4 justify-center items-center">
@@ -113,15 +115,24 @@ export default function ArweaveUpload({}) {
 
         {/* display calculated upload cast */}
         {fileCost && !fileUploaded && (
-          <div className="pb-8">
-            <p className="text-sm mb-4">
-              Cost to upload: {Math.round(fileCost * 1000) / 1000} MATIC
-            </p>
+          <div className="py-8 ">
+            <div className="mb-8 space-y-1">
+              <p className="text-sm ">
+                Cost to upload: {Math.round(fileCost * 1000) / 1000} MATIC
+              </p>
+              <p className="text-sm">
+                Your wallet balance is: {Math.round(balance * 100) / 100} MATIC
+              </p>
+              <p className="text-sm">
+                Your bundlr balance is: {Math.round(bundlrBalance * 100) / 100}{' '}
+                MATIC
+              </p>
+            </div>
             <button
               className="w-auto px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               onClick={uploadFile}
             >
-              {isLoading ? 'In progress...' : 'Upload'}
+              {isLoading ? 'In progress...' : 'Upload song'}
             </button>
           </div>
         )}

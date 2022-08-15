@@ -115,19 +115,6 @@ function MyApp({ Component, pageProps }) {
     setBalance(utils.formatEther(balance.toString()))
   }
 
-  // async function getOwnedFiles() {
-  //   try {
-  //     console.log('Retrieving bought files')
-  //     console.log('contractGetter >> ', contractRef.current)
-  //     const files = await contractRef.current.getBoughtSongs()
-  //     console.log('owned files', files)
-  //     setOwnedFiles(files)
-  //   } catch (error) {
-  //     setOwnedFiles([])
-  //     console.log('ERROR or NO FILES FOUND: ', error)
-  //   }
-  // }
-
   // checks if current chain matches with the target
   async function checkNetwork() {
     console.log(`Target network is ${targetNetworkId}`)

@@ -37,8 +37,8 @@
       ]
     },
     "/Users/antonio/Chainstack/arweave-dts/solidity/contracts/MusicMarketplace.sol": {
-      "lastModificationDate": 1659970275477,
-      "contentHash": "82089b7580a7562436c0e9c3b2d361bf",
+      "lastModificationDate": 1660150512614,
+      "contentHash": "f6bd22e69713e74715dcbf3bc53d9117",
       "sourceName": "solidity/contracts/MusicMarketplace.sol",
       "solcConfig": {
         "version": "0.8.9",
