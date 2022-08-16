@@ -1,3 +1,5 @@
+<p align="center"><img src="./article-media/arweave-banner-xs.jpeg" width="500"/></p>
+
 # Decentralized music marketplace
 
 This repository contains the code neccessary to run a decentralized music marketplace app.
