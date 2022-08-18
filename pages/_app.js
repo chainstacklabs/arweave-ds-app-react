@@ -184,7 +184,8 @@ function MyApp({ Component, pageProps }) {
           Decentralised music marketplace
         </h1>
         <h2 className="text-xl font-medium mb-12">
-          powered by <span className="text-blue-500">Arweave + Polygon!</span>
+          powered by{' '}
+          <span className="text-blue-500">Arweave, Bundlr & Polygon!</span>
         </h2>
         <p className="text-lg font-medium text-blue-600 mb-4">
           List your MP3 files and sell them with no royalties
