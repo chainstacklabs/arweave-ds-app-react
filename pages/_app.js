@@ -1,6 +1,7 @@
 import styles from '../styles/globals.css'
 import Image from 'next/image'
 import Link from 'next/link'
+import Head from 'next/head'
 
 import { WebBundlr } from '@bundlr-network/client'
 import { providers, utils, Contract } from 'ethers'
@@ -160,106 +161,144 @@ function MyApp({ Component, pageProps }) {
   }
 
   return (
-    <div className="flex flex-col h-screen justify-between">
-      <nav className="w-full p-4 flex justify-around mb-8">
-        {bundlrInstance && (
-          <div className="flex items-center justify-between sm:items-stretch sm:justify-start gap-8">
-            <Link href="/dashboard">
-              <a className="  text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 border-white hover:border-b-2 hover:border-blue-700 text-sm font-medium">
-                Dashboard
-              </a>
-            </Link>
+    <div>
+      <Head>
+        <title>Decentralised Music Marketplace</title>
+        <meta
+          name="description"
+          content="Sell your music using Arweave and Polygon"
+        />
+        <link rel="icon" href="/favicon.ico" />
 
-            <Link href="/browse">
-              <a className=" text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 border-white hover:border-b-2 hover:border-blue-700 text-sm font-medium">
-                Browse
-              </a>
-            </Link>
-            <span className="text-base">Acc {accShort()}</span>
-          </div>
-        )}
-      </nav>
-      <main className="max-w-7xl mx-auto text-center mb-auto">
-        <h1 className="text-4xl font-bold mb-2">
-          Decentralised music marketplace
-        </h1>
-        <h2 className="text-xl font-medium mb-12">
-          powered by{' '}
-          <span className="text-blue-500">Arweave, Bundlr & Polygon!</span>
-        </h2>
-        <p className="text-lg font-medium text-blue-600 mb-4">
-          List your MP3 files and sell them with no royalties
-        </p>
-        {showAppMessage && (
-          <div className="px-12 pb-12">
-            <div
-              className="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded relative"
-              role="alert"
-            >
-              <span className="block sm:inline mr-8">{appMessage}</span>
-              <button
-                className="absolute top-0 bottom-0 right-0 ml-12"
-                onClick={clearNotification}
-              >
-                <svg
-                  className="fill-current h-6 w-6 text-blue-500"
-                  role="button"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                >
-                  <title>Close</title>
-                  <path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z" />
-                </svg>
-              </button>
+        <meta
+          property="og:url"
+          content="https://arweave-music-marketplace.vercel.app/"
+        />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Decentralised Music Marketplace" />
+        <meta
+          property="og:description"
+          content="Sell your music using Arweave and Polygon"
+        />
+        <meta property="og:image" content="/music-og.jpeg" />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta
+          property="twitter:domain"
+          content="arweave-music-marketplace.vercel.app"
+        />
+        <meta
+          property="twitter:url"
+          content="https://arweave-music-marketplace.vercel.app/"
+        />
+        <meta name="twitter:title" content="Decentralised Music Marketplace" />
+        <meta
+          name="twitter:description"
+          content="Sell your music using Arweave and Polygon"
+        />
+        <meta name="twitter:image" content="/music-og.jpeg" />
+      </Head>
+      <div className="flex flex-col h-screen justify-between">
+        <nav className="w-full p-4 flex justify-around mb-8">
+          {bundlrInstance && (
+            <div className="flex items-center justify-between sm:items-stretch sm:justify-start gap-8">
+              <Link href="/dashboard">
+                <a className="  text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 border-white hover:border-b-2 hover:border-blue-700 text-sm font-medium">
+                  Dashboard
+                </a>
+              </Link>
+
+              <Link href="/browse">
+                <a className=" text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 border-white hover:border-b-2 hover:border-blue-700 text-sm font-medium">
+                  Browse
+                </a>
+              </Link>
+              <span className="text-base">Acc {accShort()}</span>
             </div>
-          </div>
-        )}
-        {/* wraps Component in MainContext to share app state */}
-        <MainContext.Provider
-          value={{
-            initWallet,
-            bundlrInstance,
-            balance,
-            fetchBalance,
-            address,
-            bundlrBalance,
-            contract,
-            contractGetter,
-            showAppMessage,
-            setShowAppMessage,
-            appMessage,
-            setAppMessage,
-            setAppMessageIsError,
-            songs,
-            setSongs,
-            getSongs,
-            URI,
-            setURI,
-            fileUploaded,
-            setFileUploaded,
-            metadataSaved,
-            setMetadataSaved,
-          }}
-        >
-          <Component {...pageProps} />
-        </MainContext.Provider>
-      </main>
-      <footer className="text-right p-2 border-t pt-4 px-2 text-blue-500">
-        <a
-          href="https://chainstack.com"
-          target="_blank"
-          rel="noopener noreferrer"
-        ></a>
-        <span className={styles.logo}>
-          Powered by{' '}
-          <Image
-            src="/chainstack.png"
-            alt="Chainstack Logo"
-            width={150}
-            height={25}
-          />
-        </span>
-      </footer>
+          )}
+        </nav>
+        <main className="max-w-7xl mx-auto text-center mb-auto">
+          <h1 className="text-4xl font-bold mb-2">
+            Decentralized music marketplace
+          </h1>
+          <h2 className="text-xl font-medium mb-12">
+            powered by{' '}
+            <span className="text-blue-500">Arweave, Bundlr & Polygon!</span>
+          </h2>
+          <p className="text-lg font-medium text-blue-600 mb-4">
+            List your MP3 files and sell them with no royalties
+          </p>
+          {showAppMessage && (
+            <div className="px-12 pb-12">
+              <div
+                className="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded relative"
+                role="alert"
+              >
+                <span className="block sm:inline mr-8">{appMessage}</span>
+                <button
+                  className="absolute top-0 bottom-0 right-0 ml-12"
+                  onClick={clearNotification}
+                >
+                  <svg
+                    className="fill-current h-6 w-6 text-blue-500"
+                    role="button"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                  >
+                    <title>Close</title>
+                    <path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          )}
+          {/* wraps Component in MainContext to share app state */}
+          <MainContext.Provider
+            value={{
+              initWallet,
+              bundlrInstance,
+              balance,
+              fetchBalance,
+              address,
+              bundlrBalance,
+              contract,
+              contractGetter,
+              showAppMessage,
+              setShowAppMessage,
+              appMessage,
+              setAppMessage,
+              setAppMessageIsError,
+              songs,
+              setSongs,
+              getSongs,
+              URI,
+              setURI,
+              fileUploaded,
+              setFileUploaded,
+              metadataSaved,
+              setMetadataSaved,
+            }}
+          >
+            <Component {...pageProps} />
+          </MainContext.Provider>
+        </main>
+        <footer className="text-right p-2 border-t pt-4 px-2 text-blue-500">
+          <a
+            href="https://chainstack.com"
+            target="_blank"
+            rel="noopener noreferrer"
+          ></a>
+          <span className={styles.logo}>
+            Powered by{' '}
+            <Image
+              src="/chainstack.png"
+              alt="Chainstack Logo"
+              width={150}
+              height={25}
+            />
+          </span>
+        </footer>
+      </div>
     </div>
   )
 }

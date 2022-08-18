@@ -13,7 +13,7 @@ export default function Home() {
         <title>Decentralised Music Marketplace</title>
         <meta
           name="description"
-          content="Sell music using Arweave and Polygon"
+          content="Sell your music using Arweave and Polygon"
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>

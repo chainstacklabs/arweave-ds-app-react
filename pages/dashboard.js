@@ -19,12 +19,7 @@ export default function Home() {
   return (
     <div className=" ">
       <Head>
-        <title>Dashboard | DMM</title>
-        <meta
-          name="description"
-          content="Sell music using Arweave and Polygon"
-        />
-        <link rel="icon" href="/favicon.ico" />
+        <title>Dashboard | Music marketplace</title>
       </Head>
 
       <div className="">

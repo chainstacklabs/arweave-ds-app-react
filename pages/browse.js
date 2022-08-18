@@ -22,12 +22,7 @@ export default function Browse() {
     // Render list of songs
     <div>
       <Head>
-        <title>Browse | Drop & Sell</title>
-        <meta
-          name="description"
-          content="Sell songs using Arweave and Polygon"
-        />
-        <link rel="icon" href="/favicon.ico" />
+        <title>Browse | Music marketplace</title>
       </Head>
       <h2 className="my-4 font-medium text-2xl">🎶 Songs listed to sale</h2>
       <p className="text-sm mb-4">
