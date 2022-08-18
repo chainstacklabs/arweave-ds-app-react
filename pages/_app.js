@@ -284,19 +284,20 @@ function MyApp({ Component, pageProps }) {
         </main>
         <footer className="text-right p-2 border-t pt-4 px-2 text-blue-500">
           <a
-            href="https://chainstack.com"
+            href="https://chainstack.com?utm_source=arweave_music_marketplace"
             target="_blank"
             rel="noopener noreferrer"
-          ></a>
-          <span className={styles.logo}>
-            Powered by{' '}
-            <Image
-              src="/chainstack.png"
-              alt="Chainstack Logo"
-              width={150}
-              height={25}
-            />
-          </span>
+          >
+            <span className={styles.logo}>
+              Powered by{' '}
+              <Image
+                src="/chainstack.png"
+                alt="Chainstack Logo"
+                width={150}
+                height={25}
+              />
+            </span>
+          </a>
         </footer>
       </div>
     </div>
