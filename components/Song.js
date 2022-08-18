@@ -110,15 +110,25 @@ export default function Song({ song }) {
           Price: {utils.formatEther(song.price)} MATIC
         </p>
       </div>
+      <p className="text-sm my-4">
+        {song.author == address
+          ? `You're the author`
+          : `${song.buyers.length - 1} buyers`}
+      </p>
       {canPlay ? (
-        <a
-          className="w-auto px-4 py-2 border border-transparent text-sm font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-          href={songURL}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Listen song
-        </a>
+        <div className="flex flex-col items-center gap-4">
+          <audio controls>
+            <source src={songURL} type="audio/mpeg"></source>
+          </audio>
+          <a
+            className="w-auto px-4 py-2 border border-transparent text-sm font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            href={songURL}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Download song
+          </a>
+        </div>
       ) : (
         <button
           className="w-auto px-4 py-2 border border-transparent text-sm font-medium rounded-md text-orange-700 bg-orange-100 hover:bg-orange-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
@@ -127,12 +137,6 @@ export default function Song({ song }) {
           {isLoading ? 'In progress...' : 'Buy song'}
         </button>
       )}
-
-      <p className="text-sm my-4">
-        {song.author == address
-          ? `You're the author`
-          : `${song.buyers.length - 1} buyers`}
-      </p>
     </div>
   )
 }
